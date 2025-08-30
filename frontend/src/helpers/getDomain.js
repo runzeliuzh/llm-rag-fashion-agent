@@ -3,28 +3,27 @@ import { isProduction } from "./isProduction";
 
 /**
  * Environment-specific domain helper:
- * - Dev: Uses localhost URLs (React: 3000, Backend: 8000 – matches FastAPI's default port)
- * - Production: Uses your deployed frontend (e.g., Vercel) and Railway backend URLs
+ * - Dev: Uses localhost URLs (React: 3000, Backend: 8000)
+ * - Production: Uses environment variables set in Vercel
  */
 export const getDomain = () => {
   // --------------------------
-  // PRODUCTION URLs (UPDATE THESE!)
+  // PRODUCTION URLs (FROM ENVIRONMENT VARIABLES)
   // --------------------------
   if (isProduction()) {
+    // Use REACT_APP_API_URL from Vercel environment variables
+    const backendUrl = process.env.REACT_APP_API_URL || "https://llm-rag-fashion-agent-production.up.railway.app";
+    const frontendUrl = process.env.REACT_APP_FRONTEND_URL || window.location.origin;
+    
     return {
-      // Your deployed React frontend (e.g., Vercel, Netlify)
-      frontendDomain: "https://your-fashion-agent-frontend.vercel.app", 
-      // Your Railway backend URL (from Railway → Deployments → "View Deployment")
-      backendDomain: "https://your-fashion-rag-backend.up.railway.app", 
+      frontendDomain: frontendUrl,
+      backendDomain: backendUrl,
     };
   }
 
   // --------------------------
   // DEVELOPMENT URLs (LOCALHOST)
   // --------------------------
-  // Matches:
-  // - React dev server: npm start → http://localhost:3000
-  // - FastAPI dev server: uvicorn app.main:app --port 8000 → http://localhost:8000
   return {
     frontendDomain: "http://localhost:3000", 
     backendDomain: "http://localhost:8000", 
