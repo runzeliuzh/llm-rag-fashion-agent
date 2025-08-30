@@ -14,11 +14,36 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# CORS configuration
-FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
+# Security middleware - Check Origin header
+@app.middleware("http")
+async def security_middleware(request: Request, call_next):
+    # Allow all methods for localhost development
+    if request.client.host in ["127.0.0.1", "localhost"]:
+        response = await call_next(request)
+        return response
+    
+    # For production, check Origin and Referer headers
+    origin = request.headers.get("origin")
+    referer = request.headers.get("referer", "")
+    
+    # Get allowed domains from environment
+    frontend_urls = os.getenv("FRONTEND_URLS", "http://localhost:3000")
+    allowed_domains = [url.strip() for url in frontend_urls.split(",")]
+    
+    # Check if request is from allowed domain
+    if not any(domain in str(origin) or domain in referer for domain in allowed_domains):
+        raise HTTPException(status_code=403, detail="Access denied: Invalid origin")
+    
+    response = await call_next(request)
+    return response
+
+# CORS configuration - SECURE: Use environment variables
+FRONTEND_URLS = os.getenv("FRONTEND_URLS", "http://localhost:3000,http://localhost:3001,http://localhost:3002")
+ALLOWED_ORIGINS = [url.strip() for url in FRONTEND_URLS.split(",")]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"] if FRONTEND_URL == "http://localhost:3000" else [FRONTEND_URL],
+    allow_origins=ALLOWED_ORIGINS,  # Configured via environment variables
     allow_credentials=True,
     allow_methods=["POST", "GET", "OPTIONS"],
     allow_headers=["Content-Type", "Authorization"],
