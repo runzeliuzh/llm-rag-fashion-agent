@@ -22,7 +22,12 @@ async def security_middleware(request: Request, call_next):
         response = await call_next(request)
         return response
     
-    # For production, check Origin and Referer headers
+    # Allow healthcheck endpoints without origin validation
+    if request.url.path in ["/", "/health", "/healthz"]:
+        response = await call_next(request)
+        return response
+    
+    # For production API endpoints, check Origin and Referer headers
     origin = request.headers.get("origin")
     referer = request.headers.get("referer", "")
     
