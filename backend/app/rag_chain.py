@@ -12,6 +12,180 @@ logger = logging.getLogger(__name__)
 DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY")  # Set this in Railway environment variables
 HF_API_KEY = os.getenv("HUGGINGFACE_API_KEY")  # Fallback option
 
+def validate_response_format(text: str) -> str:
+    """
+    Validates and ensures the response follows the required format structure
+    """
+    if not text:
+        return text
+    
+    # Check if response has the required sections
+    required_sections = ["**Style Overview:**", "**Key Pieces:**", "**Styling Tips:**"]
+    missing_sections = [section for section in required_sections if section not in text]
+    
+    if missing_sections:
+        # If format is completely wrong, try to restructure it
+        return restructure_response(text)
+    
+    # Ensure each section ends properly
+    lines = text.split('\n')
+    cleaned_lines = []
+    current_section = None
+    
+    for line in lines:
+        line = line.strip()
+        if not line:
+            cleaned_lines.append("")
+            continue
+            
+        # Check if it's a section header
+        if line.startswith("**") and line.endswith(":**"):
+            current_section = line
+            cleaned_lines.append(line)
+        elif line.startswith("•") or line.startswith("-") or line.startswith("*"):
+            # Bullet point - ensure it ends properly
+            if not line.rstrip().endswith(('.', '!', '?', ')')):
+                line = line.rstrip() + '.'
+            cleaned_lines.append(line)
+        else:
+            # Regular text - ensure it ends properly
+            if line and not line.rstrip().endswith(('.', '!', '?', ':', ')')):
+                line = line.rstrip() + '.'
+            cleaned_lines.append(line)
+    
+    return '\n'.join(cleaned_lines).strip()
+
+def restructure_response(text: str) -> str:
+    """
+    Attempts to restructure a response that doesn't follow the format
+    """
+    # Basic restructuring - split into overview and details
+    paragraphs = [p.strip() for p in text.split('\n\n') if p.strip()]
+    
+    if len(paragraphs) >= 2:
+        overview = paragraphs[0]
+        if not overview.endswith(('.', '!', '?')):
+            overview += '.'
+            
+        details = paragraphs[1] if len(paragraphs) > 1 else "Consider classic pieces that suit your style."
+        if not details.endswith(('.', '!', '?')):
+            details += '.'
+            
+        tips = paragraphs[2] if len(paragraphs) > 2 else "Focus on fit, comfort, and personal expression."
+        if not tips.endswith(('.', '!', '?')):
+            tips += '.'
+        
+        return f"""**Style Overview:** {overview}
+
+**Key Pieces:**
+• {details}
+
+**Styling Tips:** {tips}"""
+    
+    # Fallback
+    if not text.endswith(('.', '!', '?')):
+        text += '.'
+    return f"""**Style Overview:** {text}
+
+**Key Pieces:**
+• Focus on well-fitted basics and quality pieces.
+
+**Styling Tips:** Consider your lifestyle and personal preferences when choosing outfits."""
+
+def ensure_complete_response(text: str, max_length: int = 800) -> str:
+    """
+    Ensures the response ends with complete sentences and is within reasonable length
+    """
+    if not text:
+        return text
+    
+    # If text is short enough, return as is
+    if len(text) <= max_length:
+        # Check if it ends properly
+        if text.rstrip().endswith(('.', '!', '?', ':', ')')):
+            return text.rstrip()
+        else:
+            # Find the last complete sentence
+            text = text.rstrip()
+            for i in range(len(text) - 1, -1, -1):
+                if text[i] in '.!?':
+                    return text[:i + 1]
+            return text  # If no sentence ending found, return as is
+    
+    # Text is too long, find a good cutoff point
+    cutoff_text = text[:max_length]
+    
+    # Find the last complete sentence within the limit
+    for i in range(len(cutoff_text) - 1, -1, -1):
+        if cutoff_text[i] in '.!?':
+            # Check if we're not cutting off mid-word or important context
+            remaining_text = cutoff_text[:i + 1].rstrip()
+            if len(remaining_text) > max_length * 0.7:  # At least 70% of desired length
+                return remaining_text
+    
+    # If no good sentence break found, find last complete word
+    words = cutoff_text.split()
+    if len(words) > 1:
+        # Remove the last word (likely incomplete)
+        complete_text = ' '.join(words[:-1])
+        if complete_text.endswith(('.', '!', '?')):
+            return complete_text
+        else:
+            return complete_text + '.'
+    
+    return text[:max_length].rstrip() + '.'
+
+def get_response_format(query: str) -> str:
+    """
+    Determines the best response format based on the query type
+    """
+    query_lower = query.lower()
+    
+    # For outfit/styling questions
+    if any(word in query_lower for word in ['outfit', 'style', 'wear', 'look', 'dress', 'match', 'combine']):
+        return """You MUST provide responses in EXACTLY this format:
+
+**Style Overview:** [1-2 sentences describing the overall style/approach]
+
+**Key Pieces:**
+• [Item 1 with specific details]
+• [Item 2 with specific details] 
+• [Item 3 with specific details]
+
+**Styling Tips:** [2-3 sentences with practical advice]
+
+Always end each section completely. Never cut off mid-sentence."""
+
+    # For trend/shopping questions  
+    elif any(word in query_lower for word in ['trend', 'fashion', 'buy', 'shop', 'popular', 'current']):
+        return """You MUST provide responses in EXACTLY this format:
+
+**Current Trends:** [2-3 sentences about relevant trends]
+
+**What to Look For:**
+• [Trend 1 with specific details]
+• [Trend 2 with specific details]
+• [Trend 3 with specific details]
+
+**Shopping Tips:** [2-3 sentences with practical buying advice]
+
+Always end each section completely. Never cut off mid-sentence."""
+
+    # Default format for general questions
+    else:
+        return """You MUST provide responses in EXACTLY this format:
+
+**Overview:** [2-3 sentences explaining the main points]
+
+**Key Points:**
+• [Point 1 with specific details]
+• [Point 2 with specific details]
+• [Point 3 with specific details]
+
+**Recommendations:** [2-3 sentences with actionable advice]
+
+Always end each section completely. Never cut off mid-sentence."""
+
 async def get_rag_response(query: str, session_id: Optional[str] = None):
     """
     LLM-RAG response using multiple cost-effective LLM options
@@ -146,21 +320,25 @@ async def query_deepseek_llm(query: str, context: str):
         # DeepSeek API endpoint
         api_url = "https://api.deepseek.com/v1/chat/completions"
         
+        # Get the appropriate response format for this query
+        response_format = get_response_format(query)
+        
         payload = {
             "model": "deepseek-chat",  # Their main chat model
             "messages": [
                 {
                     "role": "system",
-                    "content": "You are a knowledgeable fashion expert assistant. Provide helpful, practical fashion advice based on the latest trends and styling information. Keep responses informative and actionable, providing complete thoughts and recommendations."
+                    "content": f"You are a professional fashion expert assistant. {response_format}"
                 },
                 {
                     "role": "user", 
-                    "content": f"Based on this fashion information: {context[:800]}\n\nQuestion: {query}\n\nProvide helpful fashion advice:"
+                    "content": f"Based on this fashion information: {context[:800]}\n\nQuestion: {query}\n\nProvide fashion advice following the exact format specified:"
                 }
             ],
-            "max_tokens": 500,
+            "max_tokens": 800,  # Generous limit for complete format
             "temperature": 0.7,
-            "top_p": 0.9
+            "top_p": 0.9,
+            "stop": ["**Additional", "**Note:", "**Remember:", "\n\n---", "User:"]  # Stop before extra content
         }
         
         response = requests.post(api_url, headers=headers, json=payload, timeout=30)
@@ -170,8 +348,11 @@ async def query_deepseek_llm(query: str, context: str):
             if 'choices' in result and len(result['choices']) > 0:
                 generated_text = result['choices'][0]['message']['content'].strip()
                 if generated_text and len(generated_text) > 20:
+                    # Validate and ensure proper format structure
+                    formatted_response = validate_response_format(generated_text)
                     print(f"✅ DeepSeek API response generated successfully")
-                    return generated_text
+                    print(f"📝 Response length: {len(formatted_response)} chars")
+                    return formatted_response
         else:
             print(f"❌ DeepSeek API error: {response.status_code} - {response.text}")
                     
@@ -205,7 +386,7 @@ Answer:"""
             "options": {
                 "temperature": 0.7,
                 "top_p": 0.9,
-                "max_tokens": 400
+                "max_tokens": 600  # Increased for complete responses
             }
         }
         
@@ -215,7 +396,9 @@ Answer:"""
             result = response.json()
             generated_text = result.get('response', '').strip()
             if generated_text and len(generated_text) > 20:
-                return generated_text
+                # Ensure complete response
+                complete_response = ensure_complete_response(generated_text)
+                return complete_response
                 
     except Exception as e:
         logger.warning(f"Ollama API error: {e}")
@@ -251,7 +434,7 @@ async def query_openai_compatible_llm(query: str, context: str):
                     "content": f"Fashion Context: {context[:600]}\n\nQuestion: {query}\n\nProvide helpful fashion advice:"
                 }
             ],
-            "max_tokens": 500,
+            "max_tokens": 700,  # Increased for complete responses
             "temperature": 0.7
         }
         
@@ -262,7 +445,9 @@ async def query_openai_compatible_llm(query: str, context: str):
             if 'choices' in result and len(result['choices']) > 0:
                 generated_text = result['choices'][0]['message']['content'].strip()
                 if generated_text and len(generated_text) > 20:
-                    return generated_text
+                    # Ensure complete response
+                    complete_response = ensure_complete_response(generated_text)
+                    return complete_response
                     
     except Exception as e:
         logger.warning(f"OpenAI-compatible API error: {e}")

@@ -17,43 +17,37 @@ const Features = () => {
       icon: faBrain,
       title: "RAG Implementation",
       description: "Demonstrates Retrieval-Augmented Generation with ChromaDB vector store and semantic search for contextually relevant responses.",
-      tech: "ChromaDB + DeepSeek API",
-      limitation: "Limited to 12 curated fashion articles for demo purposes"
+      tech: "ChromaDB + DeepSeek API"
     },
     {
       icon: faSearch,
       title: "Vector Search System",
       description: "Implements semantic similarity search using embeddings to retrieve relevant fashion content before generation.",
-      tech: "Text Embeddings + Cosine Similarity",
-      limitation: "Small knowledge base, production would need larger dataset"
+      tech: "Text Embeddings + Cosine Similarity"
     },
     {
       icon: faTshirt,
       title: "Domain-Specific AI",
       description: "Showcases how RAG can be applied to specific domains like fashion advice and styling recommendations.",
-      tech: "Domain-focused prompting + Retrieved context",
-      limitation: "Limited fashion expertise, demonstrates concept rather than comprehensive advice"
+      tech: "Domain-focused prompting + Retrieved context"
     },
     {
       icon: faCode,
       title: "Full-Stack Development",
       description: "Complete application demonstrating modern web development with API design, state management, and responsive UI.",
-      tech: "React + FastAPI + Python",
-      limitation: "Simplified architecture suitable for portfolio demonstration"
+      tech: "React + FastAPI + Python"
     },
     {
       icon: faRocket,
       title: "Rate Limiting & UX",
       description: "Client-server rate limiting system with graceful degradation and offline handling for production-ready user experience.",
-      tech: "Anonymous rate limiting + Error handling",
-      limitation: "Basic rate limiting, production would need user authentication"
+      tech: "Anonymous rate limiting + Error handling"
     },
     {
       icon: faLightbulb,
       title: "Deployment Ready",
       description: "Configured for cost-effective cloud deployment with environment management and containerization.",
-      tech: "Docker + Environment Config + CORS",
-      limitation: "Single-instance deployment, not optimized for high-scale production"
+      tech: "Docker + Environment Config + CORS"
     }
   ];
 
@@ -62,34 +56,6 @@ const Features = () => {
     { category: "Backend", items: ["FastAPI", "Python 3.9+", "Async/Await", "API Design"] },
     { category: "AI/RAG", items: ["ChromaDB", "Vector Embeddings", "DeepSeek LLM", "Semantic Search"] },
     { category: "DevOps", items: ["Docker", "Environment Config", "Rate Limiting", "CORS"] }
-  ];
-
-  const projectConsiderations = [
-    {
-      aspect: "RAG Architecture",
-      decision: "ChromaDB for simplicity and local development",
-      tradeoff: "Limited scalability vs ease of setup and demonstration"
-    },
-    {
-      aspect: "Vector Database",
-      decision: "File-based ChromaDB with 12 curated articles",
-      tradeoff: "Fast demo setup vs comprehensive knowledge base"
-    },
-    {
-      aspect: "LLM Selection",
-      decision: "DeepSeek API for cost-effectiveness",
-      tradeoff: "Budget-friendly vs premium model capabilities"
-    },
-    {
-      aspect: "Data Strategy",
-      decision: "Legal-only sources (Wikipedia, original content)",
-      tradeoff: "Copyright safety vs extensive fashion content"
-    },
-    {
-      aspect: "Deployment",
-      decision: "Single-instance deployment on hobby tier",
-      tradeoff: "Low cost demonstration vs high-availability production"
-    }
   ];
 
   const howItWorks = [
@@ -166,32 +132,33 @@ const Features = () => {
                     {feature.tech}
                   </span>
                 </div>
-                <div className="text-xs text-orange-600 bg-orange-50 p-2 rounded border-l-2 border-orange-200">
-                  <strong>Demo Limitation:</strong> {feature.limitation}
-                </div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Project Considerations */}
+        {/* Project Reflection */}
         <div className="mb-16">
-          <h2 className="text-2xl font-bold text-center text-gray-800 mb-8">Design Decisions & Trade-offs</h2>
-          <div className="space-y-4">
-            {projectConsiderations.map((consideration, index) => (
-              <div key={index} className="bg-white rounded-lg shadow-md p-6">
-                <div className="grid md:grid-cols-3 gap-4">
-                  <div>
-                    <h3 className="font-semibold text-gray-800 mb-2">{consideration.aspect}</h3>
-                    <p className="text-sm text-gray-600">{consideration.decision}</p>
-                  </div>
-                  <div className="md:col-span-2">
-                    <h4 className="font-medium text-gray-700 mb-1">Trade-off Analysis:</h4>
-                    <p className="text-sm text-gray-600">{consideration.tradeoff}</p>
-                  </div>
+          <h2 className="text-2xl font-bold text-center text-gray-800 mb-8">Project Reflection</h2>
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <div className="max-w-3xl mx-auto text-center">
+              <p className="text-gray-600 mb-4">
+                A focused portfolio project demonstrating RAG implementation with modern AI technologies. 
+                Designed for learning and showcasing full-stack development skills.
+              </p>
+              
+              <div className="grid md:grid-cols-2 gap-4 text-sm">
+                <div className="p-3 bg-purple-50 rounded">
+                  <h3 className="font-semibold text-purple-800 mb-1">Scope</h3>
+                  <p className="text-purple-600">Curated dataset for clear RAG demonstration</p>
+                </div>
+                
+                <div className="p-3 bg-purple-50 rounded">
+                  <h3 className="font-semibold text-purple-800 mb-1">Focus</h3>
+                  <p className="text-purple-600">Technical architecture and integration skills</p>
                 </div>
               </div>
-            ))}
+            </div>
           </div>
         </div>
 
