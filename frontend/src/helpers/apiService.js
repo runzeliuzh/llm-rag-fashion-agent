@@ -1,11 +1,14 @@
 // Simplified API service for Fashion RAG without authentication
 import { getDomain } from './getDomain';
 
-const API_BASE_URL = getDomain().backendDomain;
-
 class ApiService {
   constructor() {
     this.initializeUsageTracking();
+  }
+
+  // Get API base URL dynamically
+  getApiBaseUrl() {
+    return getDomain().backendDomain;
   }
 
   // Initialize usage tracking for anonymous users
@@ -98,7 +101,7 @@ class ApiService {
   // Get server rate limit status
   async getRateLimitStatus() {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/v1/rate-limit-status`);
+      const response = await fetch(`${this.getApiBaseUrl()}/api/v1/rate-limit-status`);
       if (response.ok) {
         return await response.json();
       }
@@ -220,7 +223,7 @@ class ApiService {
 
   // Make API request
   async apiRequest(endpoint, options = {}) {
-    const url = `${API_BASE_URL}${endpoint}`;
+    const url = `${this.getApiBaseUrl()}${endpoint}`;
     console.log(`🌐 SimpleApiService: Making API request to ${url}`);
     
     const config = {
