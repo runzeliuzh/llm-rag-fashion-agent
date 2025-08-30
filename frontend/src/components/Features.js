@@ -90,14 +90,10 @@ const Features = () => {
             RAG Fashion Assistant Demo
           </h1>
           <p className="text-lg text-gray-600 max-w-4xl mx-auto">
-            A portfolio project demonstrating Retrieval-Augmented Generation (RAG) implementation 
-            for domain-specific AI applications. Built to showcase full-stack development skills, 
-            AI integration, and practical considerations for production-ready applications.
+            A demo project demonstrating Retrieval-Augmented Generation (RAG) implementation 
+            for domain-specific AI applications.  
           </p>
-          <div className="mt-4 text-sm text-gray-500">
-            <p>🎯 Purpose: Technical demonstration and learning project</p>
-            <p>📊 Scale: 12 curated articles, optimized for cost-effective deployment</p>
-          </div>
+      
         </div>
 
         {/* How It Works */}
@@ -134,31 +130,6 @@ const Features = () => {
                 </div>
               </div>
             ))}
-          </div>
-        </div>
-
-        {/* Project Reflection */}
-        <div className="mb-16">
-          <h2 className="text-2xl font-bold text-center text-gray-800 mb-8">Project Reflection</h2>
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <div className="max-w-3xl mx-auto text-center">
-              <p className="text-gray-600 mb-4">
-                A focused portfolio project demonstrating RAG implementation with modern AI technologies. 
-                Designed for learning and showcasing full-stack development skills.
-              </p>
-              
-              <div className="grid md:grid-cols-2 gap-4 text-sm">
-                <div className="p-3 bg-purple-50 rounded">
-                  <h3 className="font-semibold text-purple-800 mb-1">Scope</h3>
-                  <p className="text-purple-600">Curated dataset for clear RAG demonstration</p>
-                </div>
-                
-                <div className="p-3 bg-purple-50 rounded">
-                  <h3 className="font-semibold text-purple-800 mb-1">Focus</h3>
-                  <p className="text-purple-600">Technical architecture and integration skills</p>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
 
