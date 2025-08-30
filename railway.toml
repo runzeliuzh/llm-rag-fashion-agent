@@ -1,0 +1,19 @@
+[build]
+builder = "nixpacks"
+
+[deploy]
+startCommand = "cd backend && python start_server.py"
+healthcheckPath = "/"
+healthcheckTimeout = 300
+restartPolicyType = "always"
+
+[env]
+RAILWAY_OPTIMIZED = "true"
+VECTOR_MAX_DOCUMENTS = "50"
+VECTOR_RETENTION_DAYS = "30"
+UPDATE_FREQUENCY = "daily"
+
+# Optional: Scheduled vector DB updates (uncomment if desired)
+# [[crons]]
+# schedule = "0 6 * * *"  # Daily at 6 AM UTC
+# command = "cd backend && python railway_vector_manager.py"

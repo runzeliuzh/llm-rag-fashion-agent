@@ -1,0 +1,62 @@
+# Sensitive files that should NOT be uploaded to GitHub
+.env
+*.env
+.env.local
+.env.production
+
+# API Keys and secrets
+config/api_keys.json
+config/secrets.json
+
+# Database and data files
+data/
+*.db
+*.sqlite
+
+# Python cache and virtual environments
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+.venv/
+venv/
+env/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Log files
+*.log
+logs/
+
+# Railway deployment files (these are auto-generated)
+.railway/
+
+# Node modules (for frontend)
+node_modules/
+
+# Build outputs
+dist/
+build/
+
+# Temporary files
+tmp/
+temp/
+
+# Cost tracking data (contains usage info)
+data/usage_tracking.json
+data/cost_estimates.json
+data/cost_alerts.json

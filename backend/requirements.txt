@@ -1,0 +1,25 @@
+# Fashion RAG API - Production Requirements
+# Optimized for Railway deployment with cost-effective dependencies
+
+# Core FastAPI Stack
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+pydantic==2.5.0
+python-dotenv==1.0.0
+
+# HTTP requests and web scraping
+requests==2.31.0
+beautifulsoup4==4.12.2
+
+# Vector database (lightweight)
+chromadb==0.4.22
+numpy==1.24.3
+
+# File upload support
+python-multipart==0.0.6
+
+# Scheduling (for automated tasks)
+schedule==1.2.0
+
+# Additional utilities for production
+httpx==0.25.2
