@@ -13,9 +13,6 @@ COPY backend/start_server.py .
 # Create necessary directories
 RUN mkdir -p data/crawled data/chroma_db
 
-# Copy data directory if it exists
-COPY backend/data/ ./data/
-
 EXPOSE 8000
 
 CMD ["python", "start_server.py"]
