@@ -30,11 +30,16 @@ def main():
     from app.main import app
     
     print("🚀 Starting Fashion RAG API server with DeepSeek integration...")
-    print("📡 API will be available at: http://localhost:8000")
-    print("📝 Test endpoint: POST http://localhost:8000/api/v1/query")
+    
+    # Get port from environment (Railway sets this)
+    port = int(os.getenv("PORT", 8000))
+    host = "0.0.0.0"
+    
+    print(f"📡 API will be available at: http://{host}:{port}")
+    print("📝 Test endpoint: POST /api/v1/query")
     print("   Body: {\"query\": \"What are autumn fashion trends?\"}")
     
-    uvicorn.run(app, host='0.0.0.0', port=8000)
+    uvicorn.run(app, host=host, port=port)
 
 if __name__ == "__main__":
     main()

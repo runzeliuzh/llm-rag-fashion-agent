@@ -4,8 +4,9 @@ dockerfilePath = "backend/Dockerfile"
 
 [deploy]
 healthcheckPath = "/"
-healthcheckTimeout = 300
+healthcheckTimeout = 600
 restartPolicyType = "always"
+startCommand = "python start_server.py"
 
 [env]
 RAILWAY_OPTIMIZED = "true"
