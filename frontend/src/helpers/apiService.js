@@ -14,7 +14,7 @@ class ApiService {
   // Initialize usage tracking for anonymous users
   initializeUsageTracking() {
     const now = Date.now();
-    const stored = localStorage.getItem('fashionAgent_usage');
+    const stored = localStorage.getItem('fashionAssistant_usage');
     
     if (stored) {
       const usage = JSON.parse(stored);
@@ -36,12 +36,12 @@ class ApiService {
       timestamp: Date.now(),
       limit: 20
     };
-    localStorage.setItem('fashionAgent_usage', JSON.stringify(usage));
+    localStorage.setItem('fashionAssistant_usage', JSON.stringify(usage));
   }
 
   // Get current usage (synchronous - for initial state)
   getUsageSync() {
-    const stored = localStorage.getItem('fashionAgent_usage');
+    const stored = localStorage.getItem('fashionAssistant_usage');
     if (stored) {
       try {
         const parsed = JSON.parse(stored);
@@ -76,7 +76,7 @@ class ApiService {
           serverResetTime: serverStatus.reset_time,
           serverSync: true
         };
-        localStorage.setItem('fashionAgent_usage', JSON.stringify(serverUsage));
+        localStorage.setItem('fashionAssistant_usage', JSON.stringify(serverUsage));
         return serverUsage;
       } else {
         // Server is not responding - mark as disconnected
@@ -84,7 +84,7 @@ class ApiService {
         const offlineUsage = this.getUsageSync();
         offlineUsage.serverSync = false;
         offlineUsage.serverResetTime = null;
-        localStorage.setItem('fashionAgent_usage', JSON.stringify(offlineUsage));
+        localStorage.setItem('fashionAssistant_usage', JSON.stringify(offlineUsage));
         return offlineUsage;
       }
     } catch (error) {
@@ -93,7 +93,7 @@ class ApiService {
       const offlineUsage = this.getUsageSync();
       offlineUsage.serverSync = false;
       offlineUsage.serverResetTime = null;
-      localStorage.setItem('fashionAgent_usage', JSON.stringify(offlineUsage));
+      localStorage.setItem('fashionAssistant_usage', JSON.stringify(offlineUsage));
       return offlineUsage;
     }
   }
@@ -127,7 +127,7 @@ class ApiService {
   async incrementUsage() {
     const usage = await this.getUsage();
     usage.count += 1;
-    localStorage.setItem('fashionAgent_usage', JSON.stringify(usage));
+    localStorage.setItem('fashionAssistant_usage', JSON.stringify(usage));
     return usage;
   }
 
@@ -280,7 +280,7 @@ class ApiService {
       serverResetTime: rateLimitInfo.reset_time
     };
     
-    localStorage.setItem('fashionAgent_usage', JSON.stringify(updatedUsage));
+    localStorage.setItem('fashionAssistant_usage', JSON.stringify(updatedUsage));
   }
 
   // Send fashion query

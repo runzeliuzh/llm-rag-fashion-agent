@@ -1,11 +1,11 @@
-# 🎨 Fashion RAG Assistant
+# 🎨 Fashion Assistant
 
-AI-powered fashion advisor demonstrating **Retrieval-Augmented Generation (RAG)** with FastAPI backend and React frontend.
+A fashion chatbot demonstrating **Retrieval-Augmented Generation (RAG)** with FastAPI backend and React frontend.
 
-![Fashion AI](https://img.shields.io/badge/Fashion-AI-pink) ![FastAPI](https://img.shields.io/badge/FastAPI-0.104.1-green) ![React](https://img.shields.io/badge/React-18.2.0-blue) ![Python](https://img.shields.io/badge/Python-3.9+-yellow)
+![Fashion](https://img.shields.io/badge/Fashion-Assistant-pink) ![FastAPI](https://img.shields.io/badge/FastAPI-0.104.1-green) ![React](https://img.shields.io/badge/React-18.2.0-blue) ![Python](https://img.shields.io/badge/Python-3.9+-yellow)
 
 **Tech Stack**: FastAPI + React + ChromaDB + DeepSeek LLM  
-**Features**: RAG implementation, rate limiting, real-time UI, production deployment
+**Features**: RAG implementation, rate limiting, web interface
 
 ## 🏗️ Architecture
 
@@ -21,8 +21,8 @@ Rate Limiting    ChromaDB Vector DB
 
 ```bash
 # Clone and setup
-git clone https://github.com/runzeliuzh/llm-rag-fashion-agent.git
-cd llm-rag-fashion-agent
+git clone https://github.com/runzeliuzh/ai-fashion-assistant.git
+cd ai-fashion-assistant
 
 # Backend
 cd backend
@@ -37,18 +37,18 @@ npm install && npm start  # → localhost:3000
 
 ## ✨ Features
 
-- **AI Fashion Advice**: Natural conversation with contextual responses
-- **Rate Limiting**: 20 queries per 5 hours for cost control
-- **Real-time Status**: Connection monitoring with offline handling
-- **Production Ready**: Docker deployment, error handling, security
+- **Fashion Chat**: Basic conversation about fashion topics
+- **Rate Limiting**: 20 queries per 5 hours 
+- **Status Display**: Shows connection status
+- **Web Interface**: Simple React frontend
 
 ## 📁 Structure
 
 ```
-backend/app/main.py           # API endpoints & RAG logic
-backend/app/rag_chain.py      # Vector search & LLM integration
-frontend/src/components/      # React UI components
-backend/data/chroma_db/       # Vector database (12 articles)
+backend/app/main.py           # API endpoints
+backend/app/rag_chain.py      # Vector search integration
+frontend/src/components/      # React components
+backend/data/chroma_db/       # Vector database
 ```
 
 ## 🌐 Deployment
@@ -79,4 +79,4 @@ For full license details, see the [LICENSE](LICENSE) file.
 
 ---
 
-*Portfolio project demonstrating full-stack AI application development*
+*Portfolio project demonstrating basic RAG implementation*

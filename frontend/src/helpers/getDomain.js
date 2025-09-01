@@ -12,7 +12,7 @@ export const getDomain = () => {
   // --------------------------
   if (isProduction()) {
     // Use REACT_APP_API_URL from Vercel environment variables
-    const backendUrl = process.env.REACT_APP_API_URL || "https://llm-rag-fashion-agent-production.up.railway.app";
+    const backendUrl = process.env.REACT_APP_API_URL || "https://ai-fashion-assistant-production.up.railway.app";
     const frontendUrl = process.env.REACT_APP_FRONTEND_URL || window.location.origin;
     
     return {

@@ -1,5 +1,5 @@
-# Fashion RAG API - Production Requirements
-# Optimized for Railway deployment with cost-effective dependencies
+# Fashion Assistant API - Requirements
+# For Railway deployment
 
 # Core FastAPI Stack
 fastapi==0.104.1

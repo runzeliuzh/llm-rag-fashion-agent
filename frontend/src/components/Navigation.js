@@ -15,7 +15,7 @@ const Navigation = ({ currentPage, onNavigate, user, onLogout }) => {
           {/* Logo and Brand */}
           <div className="flex items-center cursor-pointer" onClick={() => onNavigate('chat')}>
             <FontAwesomeIcon icon={faDiamond} className="text-2xl mr-3" />
-            <span className="text-xl font-bold">Fashion AI</span>
+            <span className="text-xl font-bold">Fashion Assistant</span>
           </div>
 
           {/* Navigation Items */}

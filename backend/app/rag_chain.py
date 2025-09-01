@@ -1,4 +1,4 @@
-# LLM-RAG Fashion Agent with cost-effective LLM integration
+# Fashion Assistant with RAG integration
 from app.vector_store import cost_optimized_vector_store as vector_store
 import logging
 from typing import Optional
